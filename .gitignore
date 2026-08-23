@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+config.local.php
+!database.sql
+!demo-data.sql
+
+# PHP runtime files and logs
+*.log
+.phpunit.result.cache
+
+# Uploaded/generated media
+/assets/uploads/players/*
+!/assets/uploads/players/.htaccess
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
