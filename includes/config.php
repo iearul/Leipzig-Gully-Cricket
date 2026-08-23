@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 // Leipzig Gully Cricket — edit only the database values for your hosting account.
 const DB_HOST = 'localhost';
-const DB_NAME = 'lgc_database';
-const DB_USER = 'lgc_user';
-const DB_PASS = 'change-me';
+const DB_NAME = 'u742141420_lgc_db';
+const DB_USER = 'u742141420_lgc_user';
+const DB_PASS = 'g:ac#+8R';
 
 // Leave empty when installed at a domain/subdomain root. Example for a folder: '/lgc'
 const BASE_URL = '';
