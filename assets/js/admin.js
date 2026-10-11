@@ -32,5 +32,13 @@
   document.querySelector('[data-clear-all]')?.addEventListener('click', () => { participantInputs.forEach((input) => { input.checked = false; }); syncParticipants(); });
   syncParticipants();
 
+  document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
+    const field = document.querySelector(button.dataset.copy);
+    if (!field) return;
+    field.select();
+    try { await navigator.clipboard.writeText(field.value); } catch { document.execCommand('copy'); }
+    button.textContent = 'Copied';
+  }));
+
   document.querySelectorAll('[data-confirm]').forEach((form) => form.addEventListener('submit', (event) => { if (!window.confirm(form.dataset.confirm)) event.preventDefault(); }));
 })();

@@ -14,6 +14,12 @@ const APP_TAGLINE = 'Casual Cricket. Serious Rankings.';
 const APP_TIMEZONE = 'Europe/Berlin';
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
+// Player password emails. SITE_URL is the public address without a folder or trailing slash,
+// e.g. 'https://lgc.example.com'. MAIL_FROM should be an address on that domain, e.g. 'noreply@lgc.example.com'.
+// While either is empty, players cannot reset passwords themselves; admins can still copy password links.
+const SITE_URL = 'https://lgc.iearul.xyz';
+const MAIL_FROM = '';
+
 date_default_timezone_set(APP_TIMEZONE);
 
 if (session_status() !== PHP_SESSION_ACTIVE) {

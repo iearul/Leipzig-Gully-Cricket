@@ -4,6 +4,9 @@ declare(strict_types=1);
 $pageTitle = $pageTitle ?? APP_NAME;
 $pageDescription = $pageDescription ?? APP_TAGLINE;
 $activePage = $activePage ?? '';
+$extraStyles = $extraStyles ?? [];
+$extraScripts = $extraScripts ?? [];
+$signedInPlayer = current_player();
 $navItems = [
     'home' => ['Home', 'index.php'],
     'players' => ['Players', 'players.php'],
@@ -26,7 +29,9 @@ $navItems = [
     <link rel="apple-touch-icon" href="<?= e(url('assets/images/lgc-app-icon-192.png')) ?>">
     <link rel="manifest" href="<?= e(url('manifest.webmanifest')) ?>">
     <link rel="stylesheet" href="<?= e(url('assets/css/style.css')) ?>">
+    <?php foreach ($extraStyles as $style): ?><link rel="stylesheet" href="<?= e(url($style)) ?>"><?php endforeach; ?>
     <script defer src="<?= e(url('assets/js/app.js')) ?>"></script>
+    <?php foreach ($extraScripts as $script): ?><script defer src="<?= e(url($script)) ?>"></script><?php endforeach; ?>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -44,6 +49,7 @@ $navItems = [
                 <a class="<?= $activePage === $key ? 'is-active' : '' ?>" href="<?= e(url($path)) ?>"><?= e($label) ?></a>
             <?php endforeach; ?>
         </nav>
+        <a class="account-link<?= $activePage === 'account' ? ' is-active' : '' ?>" href="<?= e(url('account/')) ?>"><?= $signedInPlayer ? 'My profile' : 'Player login' ?></a>
         <a class="admin-link" href="<?= e(url('admin/')) ?>">Admin</a>
     </div>
 </header>

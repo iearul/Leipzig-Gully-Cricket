@@ -35,6 +35,20 @@ $schema=file_get_contents(dirname(__DIR__).'/database.sql');
 check(str_contains($schema,'UNIQUE KEY uq_session_player'),'database prevents duplicate players within one session');
 check(str_contains($schema,'ON DELETE CASCADE'),'deleting a session removes only its attached performance rows');
 
-foreach(['admin/players.php','admin/player-form.php','admin/sessions.php','admin/session-form.php','admin/settings.php'] as $protected){$source=file_get_contents(dirname(__DIR__).'/'.$protected);check(str_contains($source,'require_admin()'),$protected.' requires an authenticated administrator');}
+foreach(['admin/players.php','admin/player-form.php','admin/sessions.php','admin/session-form.php','admin/settings.php','admin/approvals.php'] as $protected){$source=file_get_contents(dirname(__DIR__).'/'.$protected);check(str_contains($source,'require_admin()'),$protected.' requires an authenticated administrator');}
+
+check(str_contains(file_get_contents(dirname(__DIR__).'/account/stats.php'),'require_player()'),'stat submission page requires a logged-in player');
+
+check(normalize_email('  Rahim@Example.TEST ')==='rahim@example.test' && valid_email('rahim@example.test') && !valid_email('not-an-email'),'login emails are normalised and validated');
+check(password_problem('short','short')!==null && password_problem('long-enough','different')!==null && password_problem('long-enough','long-enough')===null,'player passwords need a minimum length and matching confirmation');
+[$values,$error]=parse_stat_input(['runs'=>'42','balls_faced'=>'29','fours'=>'5','sixes'=>'2','is_out'=>'1','wickets'=>'','catches'=>'1']);
+check($error===null && $values['runs']===42 && $values['wickets']===null && $values['is_out']===1,'submitted stats keep blanks as unknown and numbers as integers');
+check(parse_stat_input(['is_out'=>'1'])[1]!==null,'a submission needs at least one number');
+check(parse_stat_input(['runs'=>'10','sixes'=>'2'])[1]!==null,'fours and sixes cannot exceed the submitted runs');
+check(parse_stat_input(['runs'=>'-3'])[1]!==null && parse_stat_input(['runs'=>'1000'])[1]!==null && parse_stat_input(['runs'=>['x']])[1]!==null,'negative, huge and malformed stat values are rejected');
+check(submission_date_problem('2026-10-11','2026-10-11')===null && submission_date_problem('2026-10-12','2026-10-11')!==null && submission_date_problem('2026-09-01','2026-10-11')!==null && submission_date_problem('2026-02-30','2026-10-11')!==null,'stat dates must be real, recent and not in the future');
+check(stat_summary(['runs'=>42,'balls_faced'=>29,'fours'=>5,'sixes'=>0,'is_out'=>0,'wickets'=>2,'balls_bowled'=>18,'runs_conceded'=>16,'catches'=>1,'run_outs'=>null,'stumpings'=>null])===['batting'=>'42 runs (29 balls) · 5×4 · not out','bowling'=>'2 wkts · 16 runs · 3.0 ov','fielding'=>'1 ct'],'stat summaries read like a scorecard');
+check(str_contains($schema,'CREATE TABLE password_resets') && str_contains($schema,'UNIQUE KEY uq_password_resets_token') && str_contains($schema,'CREATE TABLE stat_submissions') && str_contains($schema,'UNIQUE KEY uq_players_email'),'schema stores hashed password links, sign-ups and stat submissions');
+check(trim((string)@file_get_contents(dirname(__DIR__).'/migrations/.htaccess'))==='Require all denied' && str_contains((string)file_get_contents(dirname(__DIR__).'/migrations/001-player-accounts.sql'),'ALTER TABLE players'),'existing databases get a protected migration file');
 
 echo "All lightweight verification checks passed.\n";

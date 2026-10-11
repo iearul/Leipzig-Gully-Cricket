@@ -10,12 +10,19 @@ A lightweight PHP 8 + MariaDB/MySQL cricket statistics platform built for a smal
 2. Open phpMyAdmin for that database and import `database.sql`.
 3. Open `includes/config.php` in Hostinger File Manager and replace `DB_HOST`, `DB_NAME`, `DB_USER`, and `DB_PASS` with the database details from hPanel.
 4. If the site will live in a folder instead of a domain or subdomain root, set `BASE_URL` in the same file (for example, `/lgc`). Otherwise leave it empty.
-5. Upload the entire project to the chosen domain/subdomain directory. Keep the folder structure unchanged.
-6. Visit `https://your-domain.example/setup.php`, create the first administrator, and use a unique password of at least 12 characters. Setup locks automatically after the account is created.
-7. Visit `/admin/`, log in, and add the players.
-8. Choose **Add session**, select the participants, enter their statistics, choose an optional Player of the Day, and save.
+5. For player password emails, set `SITE_URL` (for example, `https://lgc.example.com`, no folder, no trailing slash) and `MAIL_FROM` (an address on the same domain, for example `noreply@lgc.example.com`). Create that mailbox in hPanel if Hostinger asks for a real sender.
+6. Upload the entire project to the chosen domain/subdomain directory. Keep the folder structure unchanged.
+7. Visit `https://your-domain.example/setup.php`, create the first administrator, and use a unique password of at least 12 characters. Setup locks automatically after the account is created.
+8. Visit `/admin/`, log in, and add the players.
+9. Choose **Add session**, select the participants, enter their statistics, choose an optional Player of the Day, and save.
 
 The upload directory `assets/uploads/players/` must be writable by PHP. Hostinger normally handles this automatically; if not, set that directory to permission `755` in File Manager.
+
+## Updating an existing site to player logins
+
+1. Export the database in phpMyAdmin as a backup.
+2. Import `migrations/001-player-accounts.sql` once. Do this **before** uploading the new files; the new admin pages need the new tables.
+3. Upload the new files and set `SITE_URL` and `MAIL_FROM` in `includes/config.php`.
 
 ## Server requirements
 
@@ -37,6 +44,9 @@ Set the site to PHP 8+ and enable HTTPS in hPanel. Secure session cookies switch
 - **Sessions:** create, edit, or delete scorecards. Editing old data updates all affected totals and rankings.
 - **Exclude:** an excluded participant remains visible on that scorecard but contributes no session, statistics, points, or ranking data.
 - **Point settings:** changing a value immediately recalculates all historical session points.
+- **Player logins:** enter a player's email on their admin profile, then choose **Create password link**. The link is emailed and also shown for copying or sharing on WhatsApp; it works once, for 7 days. Players can also use **Forgot password** on the player login page once their email is saved. Removing the email removes the login.
+- **New players:** anyone can sign up at `/account/register.php`. Sign-ups appear under **Approvals**; approve them as a new player, link them to an existing player who has no login yet (avoids duplicates), or reject them.
+- **Player stats:** logged-in players submit their own numbers for a match date (last 30 days) at `/account/stats.php`. Under **Approvals**, entries are grouped by date: choose the scorecard (or a new session on that date) and approve one entry or all of them. Approved numbers replace that player's numbers on the scorecard; bonus, penalty, exclusion and Player of the Day stay with the admin. Nothing counts before approval.
 - **Monthly winners:** completed past months appear automatically in the Hall of Fame. No manual winner selection is needed.
 
 ## Backups and updates
@@ -44,5 +54,7 @@ Set the site to PHP 8+ and enable HTTPS in hPanel. Secure session cookies switch
 Before changing historical data or updating the files, export the database through phpMyAdmin and download `assets/uploads/players/`. Never place real database credentials in a public repository.
 
 ## Security notes
+
+Player password links are random, stored only as SHA-256 hashes, single-use and time-limited; emailed links always use `SITE_URL`, never the request's host. A player's session ends when their password or email login changes. Sign-ups have a hidden spam trap, a per-browser limit, and a cap of 30 waiting sign-ups.
 
 Database access uses PDO prepared statements. Admin forms use CSRF tokens; passwords use PHP's password hashing API; login attempts are rate-limited per browser session; uploads are MIME-checked, size-limited, renamed, and blocked from script execution. Destructive actions are POST-only and session deletion asks for confirmation.
