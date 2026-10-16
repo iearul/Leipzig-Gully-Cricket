@@ -16,8 +16,8 @@ $pendingApprovals = pending_approval_count(db());
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#071712"><meta name="color-scheme" content="dark">
 <title><?= e($pageTitle) ?> · LGC Admin</title><link rel="icon" type="image/png" href="<?= e(url('assets/images/favicon.png')) ?>"><link rel="apple-touch-icon" href="<?= e(url('assets/images/lgc-app-icon-192.png')) ?>">
-<link rel="stylesheet" href="<?= e(url('assets/css/style.css')) ?>"><link rel="stylesheet" href="<?= e(url('assets/css/admin.css')) ?>">
-<script defer src="<?= e(url('assets/js/admin.js')) ?>"></script></head><body class="admin-body">
+<link rel="stylesheet" href="<?= e(asset('assets/css/style.css')) ?>"><link rel="stylesheet" href="<?= e(asset('assets/css/admin.css')) ?>">
+<script defer src="<?= e(asset('assets/js/admin.js')) ?>"></script></head><body class="admin-body">
 <a class="skip-link" href="#admin-main">Skip to content</a>
 <header class="admin-header"><div class="admin-shell admin-header-inner">
     <a class="brand" href="<?= e(url('admin/')) ?>"><span class="brand-mark" aria-hidden="true"><i></i></span><span><strong>LGC Admin</strong><small>Scoreboard control</small></span></a>

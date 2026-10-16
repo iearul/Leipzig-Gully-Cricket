@@ -15,6 +15,13 @@ function url(string $path = ''): string
     return rtrim(BASE_URL, '/') . '/' . ltrim($path, '/');
 }
 
+// Stylesheets and scripts get their file time as a version, so browsers and the CDN fetch changed files at once.
+function asset(string $path): string
+{
+    $file = dirname(__DIR__) . '/' . ltrim($path, '/');
+    return url($path) . (is_file($file) ? '?v=' . filemtime($file) : '');
+}
+
 function redirect(string $path): never
 {
     header('Location: ' . url($path));

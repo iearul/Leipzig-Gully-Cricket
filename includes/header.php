@@ -28,10 +28,10 @@ $navItems = [
     <link rel="icon" type="image/png" href="<?= e(url('assets/images/favicon.png')) ?>">
     <link rel="apple-touch-icon" href="<?= e(url('assets/images/lgc-app-icon-192.png')) ?>">
     <link rel="manifest" href="<?= e(url('manifest.webmanifest')) ?>">
-    <link rel="stylesheet" href="<?= e(url('assets/css/style.css')) ?>">
-    <?php foreach ($extraStyles as $style): ?><link rel="stylesheet" href="<?= e(url($style)) ?>"><?php endforeach; ?>
-    <script defer src="<?= e(url('assets/js/app.js')) ?>"></script>
-    <?php foreach ($extraScripts as $script): ?><script defer src="<?= e(url($script)) ?>"></script><?php endforeach; ?>
+    <link rel="stylesheet" href="<?= e(asset('assets/css/style.css')) ?>">
+    <?php foreach ($extraStyles as $style): ?><link rel="stylesheet" href="<?= e(asset($style)) ?>"><?php endforeach; ?>
+    <script defer src="<?= e(asset('assets/js/app.js')) ?>"></script>
+    <?php foreach ($extraScripts as $script): ?><script defer src="<?= e(asset($script)) ?>"></script><?php endforeach; ?>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to content</a>

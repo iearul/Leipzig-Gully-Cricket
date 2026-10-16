@@ -66,4 +66,7 @@ check(draw_text($sample)==="Team A (2): Rahim, Karim\nTeam B (1): Imran\nTeam B 
 check(draw_text(['mode'=>'order','draw_date'=>'2026-10-16','order'=>[['id'=>1,'name'=>'Rahim'],['id'=>null,'name'=>'Karim']],'toss_choice'=>null])==="1. Rahim\n2. Karim",'a batting order reads as a numbered list');
 check(str_contains($schema,'CREATE TABLE draws') && str_contains((string)file_get_contents(dirname(__DIR__).'/migrations/002-draws.sql'),'CREATE TABLE draws'),'fresh installs and existing databases get the draws table');
 
+check(preg_match('#^/assets/css/style\.css\?v=\d+$#',asset('assets/css/style.css'))===1 && asset('assets/css/missing.css')==='/assets/css/missing.css','stylesheets carry their file time as a cache-busting version');
+foreach(['includes/header.php','includes/admin-header.php','includes/auth-header.php','admin/index.php','setup.php'] as $layout){ check(!preg_match("#url\('assets/(css|js)/#",(string)file_get_contents(dirname(__DIR__).'/'.$layout)),$layout.' links CSS and JS through asset()'); }
+
 echo "All lightweight verification checks passed.\n";
