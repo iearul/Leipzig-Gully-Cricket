@@ -19,6 +19,10 @@ $playersStatement->execute($sessionId ? [$sessionId] : []);
 $players = $playersStatement->fetchAll();
 $allowedIds = array_map(static fn(array $player): int => (int)$player['id'],$players);
 $error = '';
+if (!$sessionId && $_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_GET['from_draw']) && ($draw = current_draw($pdo))) {
+    foreach (draw_entrants($draw) as $entrant) if ($entrant['id'] !== null && in_array((int)$entrant['id'],$allowedIds,true)) $currentStats[(int)$entrant['id']] = ['player_id'=>(int)$entrant['id']];
+    $session['team_info'] = draw_text($draw); $session['session_date'] = min($draw['draw_date'],date('Y-m-d'));
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();

@@ -125,6 +125,15 @@ CREATE TABLE stat_submissions (
     INDEX idx_stat_submissions_player (player_id, status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE draws (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    draw_date DATE NOT NULL,
+    mode ENUM('teams', 'order') NOT NULL,
+    result TEXT NOT NULL,
+    toss_choice ENUM('bat', 'bowl') NULL,
+    created_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE point_settings (
     setting_key VARCHAR(80) PRIMARY KEY,
     setting_value DECIMAL(10,2) NOT NULL,

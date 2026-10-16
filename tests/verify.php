@@ -51,4 +51,19 @@ check(stat_summary(['runs'=>42,'balls_faced'=>29,'fours'=>5,'sixes'=>0,'is_out'=
 check(str_contains($schema,'CREATE TABLE password_resets') && str_contains($schema,'UNIQUE KEY uq_password_resets_token') && str_contains($schema,'CREATE TABLE stat_submissions') && str_contains($schema,'UNIQUE KEY uq_players_email'),'schema stores hashed password links, sign-ups and stat submissions');
 check(trim((string)@file_get_contents(dirname(__DIR__).'/migrations/.htaccess'))==='Require all denied' && str_contains((string)file_get_contents(dirname(__DIR__).'/migrations/001-player-accounts.sql'),'ALTER TABLE players'),'existing databases get a protected migration file');
 
+$entrants=array_map(static fn(int $number): array => ['id'=>$number<=7?$number:null,'name'=>'P'.$number],range(1,9));
+$teamDraw=make_draw('teams',$entrants);
+$drawn=array_merge(...$teamDraw['teams']); sort($drawn);
+$expected=$entrants; sort($expected);
+check(count($teamDraw['teams'])===2 && $drawn===$expected && in_array($teamDraw['toss'],[0,1],true),'a team draw places every player exactly once and picks a toss winner');
+$sizes=[]; for($round=0;$round<200;$round++){ $sizes[implode('-',array_map('count',make_draw('teams',$entrants)['teams']))]=true; }
+check(array_keys($sizes)===['5-4','4-5'] || array_keys($sizes)===['4-5','5-4'],'with an odd count either team can get the extra player, never more than one');
+$orderDraw=make_draw('order',$entrants)['order']; sort($orderDraw);
+check($orderDraw===$expected,'a batting order draw lists every player exactly once');
+check(parse_guest_names("Karim\n rafi , karim\r\n\n  Big   Joe")===['Karim','rafi','Big Joe'],'guest names split on lines or commas, trimmed and de-duplicated');
+$sample=['mode'=>'teams','draw_date'=>'2026-10-16','teams'=>[[['id'=>1,'name'=>'Rahim'],['id'=>null,'name'=>'Karim']],[['id'=>2,'name'=>'Imran']]],'toss'=>1,'toss_choice'=>'bowl'];
+check(draw_text($sample)==="Team A (2): Rahim, Karim\nTeam B (1): Imran\nTeam B won the toss and chose to bowl." && str_starts_with(draw_text($sample,true),'🏏 LGC teams · 16 Oct 2026'),'a draw reads as session team information and as a WhatsApp message');
+check(draw_text(['mode'=>'order','draw_date'=>'2026-10-16','order'=>[['id'=>1,'name'=>'Rahim'],['id'=>null,'name'=>'Karim']],'toss_choice'=>null])==="1. Rahim\n2. Karim",'a batting order reads as a numbered list');
+check(str_contains($schema,'CREATE TABLE draws') && str_contains((string)file_get_contents(dirname(__DIR__).'/migrations/002-draws.sql'),'CREATE TABLE draws'),'fresh installs and existing databases get the draws table');
+
 echo "All lightweight verification checks passed.\n";

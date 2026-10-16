@@ -24,6 +24,12 @@ The upload directory `assets/uploads/players/` must be writable by PHP. Hostinge
 2. Import `migrations/001-player-accounts.sql` once. Do this **before** uploading the new files; the new admin pages need the new tables.
 3. Upload the new files and set `SITE_URL` and `MAIL_FROM` in `includes/config.php`.
 
+## Updating an existing site to the match-day draw
+
+1. Export the database in phpMyAdmin as a backup.
+2. Import `migrations/002-draws.sql` once, **before** uploading the new files.
+3. Upload the new files.
+
 ## Server requirements
 
 - PHP 8.0 or newer
@@ -47,6 +53,7 @@ Set the site to PHP 8+ and enable HTTPS in hPanel. Secure session cookies switch
 - **Player logins:** enter a player's email on their admin profile, then choose **Create password link**. The link is emailed and also shown for copying or sharing on WhatsApp; it works once, for 7 days. Players can also use **Forgot password** on the player login page once their email is saved. Removing the email removes the login.
 - **New players:** anyone can sign up at `/account/register.php`. Sign-ups appear under **Approvals**; approve them as a new player, link them to an existing player who has no login yet (avoids duplicates), or reject them.
 - **Player stats:** logged-in players submit their own numbers for a match date (last 30 days) at `/account/stats.php`. Under **Approvals**, entries are grouped by date: choose the scorecard (or a new session on that date) and approve one entry or all of them. Approved numbers replace that player's numbers on the scorecard; bonus, penalty, exclusion and Player of the Day stay with the admin. Nothing counts before approval.
+- **Draw:** on match day, open **Draw**, tick who is playing and type any guests (one name per line; guests are for that draw only and get no stats). **Draw two teams** splits everyone randomly (with an odd count one team gets the extra player) and tosses a coin; record whether the toss winner bats or bowls first. **Draw batting order** gives everyone a random number, for days with too few players for two teams. Drawing again replaces the draw. Today's draw shows on the homepage; **Copy for WhatsApp** copies it for the group, and **Start session** opens a new scorecard with the drawn players ticked and the teams in the team information.
 - **Monthly winners:** completed past months appear automatically in the Hall of Fame. No manual winner selection is needed.
 
 ## Backups and updates

@@ -9,6 +9,8 @@ $leader = $ranking[0] ?? null;
 $topThree = array_slice($ranking, 0, 3);
 $latest = get_latest_session($pdo);
 $totals = get_club_totals($pdo);
+$draw = current_draw($pdo, true);
+$drawRows = $draw ? draw_player_rows($pdo, $draw) : [];
 
 $highestScorer = null;
 $bestBowler = null;
@@ -60,6 +62,15 @@ require __DIR__ . '/includes/header.php';
         <?php endif; ?>
     </div>
 </section>
+
+<?php if ($draw): ?>
+<section class="section-sm">
+    <div class="shell">
+        <div class="section-head"><div><p class="eyebrow">Match day · <?= e(format_date($draw['draw_date'])) ?></p><h2><?= $draw['mode'] === 'teams' ? 'Today’s teams' : 'Today’s batting order' ?></h2></div></div>
+        <div class="surface draw-result"><?php require __DIR__ . '/includes/draw-board.php'; ?></div>
+    </div>
+</section>
+<?php endif; ?>
 
 <section class="section">
     <div class="shell">

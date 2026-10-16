@@ -7,6 +7,7 @@ $adminNav = [
     'dashboard' => ['Dashboard', 'admin/'],
     'players' => ['Players', 'admin/players.php'],
     'sessions' => ['Sessions', 'admin/sessions.php'],
+    'draw' => ['Draw', 'admin/draw.php'],
     'approvals' => ['Approvals', 'admin/approvals.php'],
     'settings' => ['Point settings', 'admin/settings.php'],
 ];

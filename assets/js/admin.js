@@ -32,6 +32,21 @@
   document.querySelector('[data-clear-all]')?.addEventListener('click', () => { participantInputs.forEach((input) => { input.checked = false; }); syncParticipants(); });
   syncParticipants();
 
+  const drawForm = document.querySelector('[data-draw-form]');
+  const drawCount = drawForm?.querySelector('[data-draw-count]');
+  if (drawForm && drawCount) {
+    const guests = drawForm.querySelector('[name="guests"]');
+    const updateCount = () => {
+      const guestNames = new Set((guests?.value ?? '').split(/[\n,]/).map((name) => name.trim().replace(/\s+/g, ' ').toLowerCase()).filter(Boolean));
+      const total = drawForm.querySelectorAll('[data-participant]:checked').length + guestNames.size;
+      drawCount.textContent = `${total} player${total === 1 ? '' : 's'} selected`;
+    };
+    drawForm.addEventListener('input', updateCount);
+    drawForm.addEventListener('change', updateCount);
+    drawForm.querySelectorAll('[data-select-all],[data-clear-all]').forEach((button) => button.addEventListener('click', updateCount));
+    updateCount();
+  }
+
   document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => {
     const field = document.querySelector(button.dataset.copy);
     if (!field) return;
