@@ -8,10 +8,10 @@ A lightweight PHP 8 + MariaDB/MySQL cricket statistics platform built for a smal
 
 1. In Hostinger hPanel, create a new MariaDB/MySQL database and database user. Save the host, database name, username, and password.
 2. Open phpMyAdmin for that database and import `database.sql`.
-3. Open `includes/config.php` in Hostinger File Manager and replace `DB_HOST`, `DB_NAME`, `DB_USER`, and `DB_PASS` with the database details from hPanel.
-4. If the site will live in a folder instead of a domain or subdomain root, set `BASE_URL` in the same file (for example, `/lgc`). Otherwise leave it empty.
-5. For player password emails, set `SITE_URL` (for example, `https://lgc.example.com`, no folder, no trailing slash) and `MAIL_FROM` (an address on the same domain, for example `noreply@lgc.example.com`). Create that mailbox in hPanel if Hostinger asks for a real sender.
-6. Upload the entire project to the chosen domain/subdomain directory. Keep the folder structure unchanged.
+3. Upload the entire project to the chosen domain/subdomain directory. Keep the folder structure unchanged.
+4. In Hostinger File Manager, copy `includes/config.local.example.php` to `includes/config.local.php`, open the copy, and replace `DB_HOST`, `DB_NAME`, `DB_USER`, and `DB_PASS` with the database details from hPanel. This file holds the passwords: it is listed in `.gitignore`, never goes into the repository, and later uploads never overwrite it. Do not put passwords in `includes/config.php`; that file is public.
+5. If the site will live in a folder instead of a domain or subdomain root, set `BASE_URL` in `includes/config.local.php` (for example, `/lgc`). Otherwise leave it empty.
+6. For player password emails, set `SITE_URL` (for example, `https://lgc.example.com`, no folder, no trailing slash) and `MAIL_FROM` (an address on the same domain, for example `noreply@lgc.example.com`) in the same file. Create that mailbox in hPanel if Hostinger asks for a real sender.
 7. Visit `https://your-domain.example/setup.php`, create the first administrator, and use a unique password of at least 12 characters. Setup locks automatically after the account is created.
 8. Visit `/admin/`, log in, and add the players.
 9. Choose **Add session**, select the participants, enter their statistics, choose an optional Player of the Day, and save.
@@ -22,7 +22,16 @@ The upload directory `assets/uploads/players/` must be writable by PHP. Hostinge
 
 1. Export the database in phpMyAdmin as a backup.
 2. Import `migrations/001-player-accounts.sql` once. Do this **before** uploading the new files; the new admin pages need the new tables.
-3. Upload the new files and set `SITE_URL` and `MAIL_FROM` in `includes/config.php`.
+3. Upload the new files and set `SITE_URL` and `MAIL_FROM` in `includes/config.local.php`.
+
+## Updating an existing site to `config.local.php`
+
+Older versions kept the database password in `includes/config.php`. The new `config.php` holds no hosting values, so create the local file first or the site shows "temporarily unavailable":
+
+1. In Hostinger File Manager, create `includes/config.local.php` with the contents of `includes/config.local.example.php`.
+2. Fill it in with the values from the old `includes/config.php` on the server: `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `BASE_URL`, `SITE_URL`, and `MAIL_FROM`.
+3. Upload the new files.
+4. If a real password was ever committed to the repository, it stays in the git history: change the database user's password in hPanel → Databases and put only the new password in `includes/config.local.php`.
 
 ## Updating an existing site to the match-day draw
 
@@ -58,7 +67,7 @@ Set the site to PHP 8+ and enable HTTPS in hPanel. Secure session cookies switch
 
 ## Backups and updates
 
-Before changing historical data or updating the files, export the database through phpMyAdmin and download `assets/uploads/players/`. Never place real database credentials in a public repository.
+Before changing historical data or updating the files, export the database through phpMyAdmin and download `assets/uploads/players/` and `includes/config.local.php`. Never place real database credentials in a public repository; they belong only in `includes/config.local.php` on the server.
 
 ## Security notes
 

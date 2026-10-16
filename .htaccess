@@ -1,7 +1,7 @@
 Options -Indexes
 DirectoryIndex index.php
 
-<FilesMatch "^(config\.php|database\.sql|demo-data\.sql|README\.md)$">
+<FilesMatch "^(config\.php|config\.local\.php|config\.local\.example\.php|database\.sql|demo-data\.sql|README\.md)$">
     Require all denied
 </FilesMatch>
 

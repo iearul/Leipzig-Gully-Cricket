@@ -1,24 +1,27 @@
 <?php
 declare(strict_types=1);
 
-// Leipzig Gully Cricket — edit only the database values for your hosting account.
-const DB_HOST = 'localhost';
-const DB_NAME = 'u742141420_lgc_db';
-const DB_USER = 'u742141420_lgc_user';
-const DB_PASS = 'g:ac#+8R';
+// Leipzig Gully Cricket — do not put passwords in this file; it is public on GitHub.
+// Hosting values live in includes/config.local.php, which git ignores. Copy
+// config.local.example.php to config.local.php on the server and fill it in.
+if (is_file(__DIR__ . '/config.local.php')) {
+    require __DIR__ . '/config.local.php';
+}
 
-// Leave empty when installed at a domain/subdomain root. Example for a folder: '/lgc'
-const BASE_URL = '';
+// Placeholders for anything config.local.php leaves out. With no database login the site shows
+// "temporarily unavailable"; with no SITE_URL or MAIL_FROM players cannot reset passwords themselves.
+defined('DB_HOST') || define('DB_HOST', 'localhost');
+defined('DB_NAME') || define('DB_NAME', '');
+defined('DB_USER') || define('DB_USER', '');
+defined('DB_PASS') || define('DB_PASS', '');
+defined('BASE_URL') || define('BASE_URL', '');
+defined('SITE_URL') || define('SITE_URL', '');
+defined('MAIL_FROM') || define('MAIL_FROM', '');
+
 const APP_NAME = 'Leipzig Gully Cricket';
 const APP_TAGLINE = 'Casual Cricket. Serious Rankings.';
 const APP_TIMEZONE = 'Europe/Berlin';
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
-
-// Player password emails. SITE_URL is the public address without a folder or trailing slash,
-// e.g. 'https://lgc.example.com'. MAIL_FROM should be an address on that domain, e.g. 'noreply@lgc.example.com'.
-// While either is empty, players cannot reset passwords themselves; admins can still copy password links.
-const SITE_URL = 'https://lgc.iearul.xyz';
-const MAIL_FROM = '';
 
 date_default_timezone_set(APP_TIMEZONE);
 
